@@ -7,22 +7,37 @@
 
 import SwiftUI
 
+// View
 struct ContentView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                ForEach(viewModel.cards) { card in
-                    CardView(card: card)
-                        .aspectRatio(2/3, contentMode: .fit)
-                        .onTapGesture {
-                            viewModel.choose(card)
-                        }
+            VStack {
+                HStack {
+                    Text(viewModel.currentTheme.id)
+                        .font(.largeTitle)
+                        .fontWeight(.heavy)
+                    Spacer()
+                    Button {
+                        viewModel.startNewGame()
+                    } label: {
+                       Image(systemName: "arrow.triangle.2.circlepath")
+                    }
+                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 }
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                    ForEach(viewModel.cards) { card in
+                        CardView(card: card)
+                            .aspectRatio(2/3, contentMode: .fit)
+                            .onTapGesture {
+                                viewModel.choose(card)
+                            }
+                    }
+                }
+                .foregroundColor(viewModel.currentTheme.colorOfCards)
             }
         }
-        .foregroundColor(/*@START_MENU_TOKEN@*/.red/*@END_MENU_TOKEN@*/)
         .padding(.horizontal)
     }
 }

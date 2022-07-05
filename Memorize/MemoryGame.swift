@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
+// Model
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
+    private(set) var theme: Theme
     
     private var indexOfTheOneAndOnlyFaceUpCard: Int?
     
@@ -33,11 +36,12 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
-    init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
+    init(with theme: Theme) {
+        self.theme = theme
         cards = Array<Card>()
-        // add number numberOfPairsOfCards x 2 cards to cards array
-        for pairIndex in 0..<numberOfPairsOfCards {
-            let content: CardContent = createCardContent(pairIndex)
+        // add number numberOfPairs x 2 cards to cards array from theme
+        for pairIndex in 0..<theme.numberOfPairs {
+            let content: CardContent = theme.allUsableContent[pairIndex]
             cards.append(Card(content: content, id: pairIndex*2))
             cards.append(Card(content: content, id: pairIndex*2+1))
         }
@@ -50,5 +54,23 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         var content: CardContent
         
         var id: Int
+    }
+    
+    struct Theme: Identifiable {
+        let id: String
+        let allUsableContent: [CardContent]
+        let numberOfPairs: Int
+        let colorOfCards: Color
+        
+        init(id: String, allUsableContent: [CardContent], numberOfPairs: Int) {
+            self.init(id: id, allUsableContent: allUsableContent, numberOfPairs: numberOfPairs, colorOfCards: .red)
+        }
+        
+        init(id: String, allUsableContent: [CardContent], numberOfPairs: Int, colorOfCards: Color) {
+            self.id = id
+            self.allUsableContent = allUsableContent
+            self.numberOfPairs = allUsableContent.count < numberOfPairs ? allUsableContent.count : numberOfPairs
+            self.colorOfCards = colorOfCards
+        }
     }
 }
