@@ -40,8 +40,10 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         self.theme = theme
         cards = Array<Card>()
         // add number numberOfPairs x 2 cards to cards array from theme
+        var randomlySelectedContent = theme.allUsableContent
+        randomlySelectedContent.shuffle()
         for pairIndex in 0..<theme.numberOfPairs {
-            let content: CardContent = theme.allUsableContent[pairIndex]
+            let content: CardContent = randomlySelectedContent[pairIndex]
             cards.append(Card(content: content, id: pairIndex*2))
             cards.append(Card(content: content, id: pairIndex*2+1))
         }
