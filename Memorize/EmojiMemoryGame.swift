@@ -9,11 +9,14 @@ import SwiftUI
 
 // ModelView
 class EmojiMemoryGame: ObservableObject {
-    static let vehicleEmojis = [ "✈️", "🚂", "🚁", "🚀", "🛴", "🚲", "🚒", "🚐", "🛻", "🚚", "🚛", "🚔", "🚍", "🚘", "🚖", "🚠", "🚆" ]
-    static let smileyEmojis = [ "😀", "😃", "😄", "😆", "🥹", "😅" ]
-    static let flagEmojis = [ "🇺🇸", "🏳️‍🌈", "🇸🇦", "🇨🇳", "🏴‍☠️", "🇮🇶", "🏁", "🇻🇪" ]
+    typealias Card = MemoryGame<String>.Card
+    typealias Theme = MemoryGame<String>.Theme
     
-    static let gameThemes: [MemoryGame<String>.Theme] = [
+    private static let vehicleEmojis = [ "✈️", "🚂", "🚁", "🚀", "🛴", "🚲", "🚒", "🚐", "🛻", "🚚", "🚛", "🚔", "🚍", "🚘", "🚖", "🚠", "🚆" ]
+    private static let smileyEmojis = [ "😀", "😃", "😄", "😆", "🥹", "😅" ]
+    private static let flagEmojis = [ "🇺🇸", "🏳️‍🌈", "🇸🇦", "🇨🇳", "🏴‍☠️", "🇮🇶", "🏁", "🇻🇪" ]
+    
+    static let gameThemes: [Theme] = [
         .init(id: "Vehicle Game", allUsableContent: vehicleEmojis, numberOfPairs: 10, colorOfCards: .blue),
         .init(id: "Smiley Game", allUsableContent: smileyEmojis, numberOfPairs: 6, colorOfCards: .green),
         .init(id: "Flag Game", allUsableContent: flagEmojis, numberOfPairs: 8)
@@ -26,17 +29,17 @@ class EmojiMemoryGame: ObservableObject {
     
     @Published private var model = createMemoryGame()
         
-    var cards: Array<MemoryGame<String>.Card> {
+    var cards: Array<Card> {
         return model.cards
     }
     
-    var currentTheme: MemoryGame<String>.Theme {
+    var currentTheme: Theme {
         return model.theme
     }
         
     // MARK: - Intent(s)
     
-    func choose(_ card: MemoryGame<String>.Card) {
+    func choose(_ card: Card) {
         model.choose(card)
     }
     

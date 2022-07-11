@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  Memorize
 //
 //  Created by Alexander Kouthoofd on 5/15/22.
@@ -8,65 +8,46 @@
 import SwiftUI
 
 // View
-struct ContentView: View {
-    @ObservedObject var viewModel: EmojiMemoryGame
+struct EmojiMemoryGameView: View {
+    @ObservedObject var game: EmojiMemoryGame
     
     var body: some View {
         ScrollView {
             VStack {
                 HStack {
-                    Text(viewModel.currentTheme.id)
+                    Text(game.currentTheme.id)
                         .font(.largeTitle)
                         .fontWeight(.heavy)
                     Spacer()
                     Button {
-                        viewModel.startNewGame()
+                        game.startNewGame()
                     } label: {
                        Image(systemName: "arrow.triangle.2.circlepath")
                     }
                     .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                    ForEach(viewModel.cards) { card in
+                    ForEach(game.cards) { card in
                         CardView(card: card)
                             .aspectRatio(2/3, contentMode: .fit)
                             .onTapGesture {
-                                viewModel.choose(card)
+                                game.choose(card)
                             }
                     }
                 }
-                .foregroundColor(viewModel.currentTheme.colorOfCards)
+                .foregroundColor(game.currentTheme.colorOfCards)
             }
         }
         .padding(.horizontal)
     }
 }
 
-struct CardView: View {
-    let card: MemoryGame<String>.Card
-    
-    var body: some View {
-        ZStack {
-            let shape = RoundedRectangle(cornerRadius: 20)
-            if card.isFaceUp {
-                shape.fill().foregroundColor(.white)
-                shape.strokeBorder(lineWidth: 3)
-                Text(card.content).font(.largeTitle)
-            } else if card.isMatched {
-                shape.opacity(0)
-            } else {
-                shape.fill()
-            }
-        }
-    }
-}
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()
-         ContentView(viewModel: game)
+         EmojiMemoryGameView(game: game)
             .preferredColorScheme(.dark)
-        ContentView(viewModel: game)
+        EmojiMemoryGameView(game: game)
             .preferredColorScheme(.light)
     }
 }
