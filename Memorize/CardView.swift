@@ -13,16 +13,14 @@ struct CardView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let displayedCard = ZStack {
+            ZStack {
+                Circle()
+                    .padding(DrawingConstants.timerCirclePadding)
+                    .opacity(DrawingConstants.timerCircleOpacity)
                 Text(card.content)
                     .font(font(in: geometry.size))
             }
             .cardify(isFaceUp: card.isFaceUp)
-            if (card.isMatched)  {
-                displayedCard.opacity(0)
-            } else {
-                displayedCard
-            }
         }
     }
     
@@ -31,6 +29,8 @@ struct CardView: View {
     }
     
     private struct DrawingConstants {
-        static let fontScale: CGFloat = 0.5
+        static let fontScale: CGFloat = 0.7
+        static let timerCirclePadding: CGFloat = 5
+        static let timerCircleOpacity: CGFloat = 0.5
     }
 }

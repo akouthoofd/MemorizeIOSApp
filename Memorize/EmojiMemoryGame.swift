@@ -17,7 +17,7 @@ class EmojiMemoryGame: ObservableObject {
     private static let flagEmojis = [ "🇺🇸", "🏳️‍🌈", "🇸🇦", "🇨🇳", "🏴‍☠️", "🇮🇶", "🏁", "🇻🇪" ]
     
     static let gameThemes: [Theme] = [
-        .init(id: "Vehicle Game", allUsableContent: vehicleEmojis, numberOfPairs: 10, colorOfCards: .blue),
+        .init(id: "Vehicle Game", allUsableContent: vehicleEmojis, numberOfPairs: 16, colorOfCards: .blue),
         .init(id: "Smiley Game", allUsableContent: smileyEmojis, numberOfPairs: 6, colorOfCards: .green),
         .init(id: "Flag Game", allUsableContent: flagEmojis, numberOfPairs: 8)
     ]
