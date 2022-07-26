@@ -14,7 +14,7 @@ struct CardView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Circle()
+                Pie(startAngle: Angle(degrees: 0 - 90), endAngle: Angle(degrees: 110 - 90))
                     .padding(DrawingConstants.timerCirclePadding)
                     .opacity(DrawingConstants.timerCircleOpacity)
                 Text(card.content)
