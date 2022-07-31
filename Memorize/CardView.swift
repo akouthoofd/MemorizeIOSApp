@@ -18,18 +18,23 @@ struct CardView: View {
                     .padding(DrawingConstants.timerCirclePadding)
                     .opacity(DrawingConstants.timerCircleOpacity)
                 Text(card.content)
-                    .font(font(in: geometry.size))
+                    .rotationEffect(Angle.degrees(card.isMatched ? 360 : 0))
+                    .animation(.spring(), value: card.isMatched)
+                    .font(Font.system(size: DrawingConstants.fontSize))
+                    .scaleEffect(scale(thatFits: geometry.size))
             }
             .cardify(isFaceUp: card.isFaceUp)
+            
         }
     }
     
-    private func font(in size: CGSize) -> Font {
-        Font.system(size: min(size.width, size.height) * DrawingConstants.fontScale)
+    private func scale(thatFits size: CGSize) -> CGFloat {
+        min(size.width, size.height) / (DrawingConstants.fontSize / DrawingConstants.fontScale)
     }
     
     private struct DrawingConstants {
         static let fontScale: CGFloat = 0.7
+        static let fontSize: CGFloat = 32
         static let timerCirclePadding: CGFloat = 5
         static let timerCircleOpacity: CGFloat = 0.5
     }

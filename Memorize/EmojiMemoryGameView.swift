@@ -53,6 +53,7 @@ struct ContentView_Previews: PreviewProvider {
         game.choose(game.cards.first!)
         return EmojiMemoryGameView(game: game)
             .preferredColorScheme(.dark)
+            .previewInterfaceOrientation(.portrait)
 //        EmojiMemoryGameView(game: game)
 //            .preferredColorScheme(.light)
     }
