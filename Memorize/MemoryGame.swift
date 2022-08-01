@@ -11,7 +11,7 @@ import SwiftUI
 // Model
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
-    private(set) var theme: Theme
+    private(set) var score: Int = 0
     
     private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get { cards.indices.filter({ cards[$0].isFaceUp }).oneAndOnly }
@@ -27,22 +27,26 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
+                    score += 2
+                } else if (cards[chosenIndex].isPreviouslySeen || cards[potentialMatchIndex].isPreviouslySeen) {
+                    // score should not drop below zero
+                    score -= (score > 0) ? 1 : 0
                 }
+                
                 cards[chosenIndex].isFaceUp = true
+                cards[chosenIndex].isPreviouslySeen = true
+                cards[potentialMatchIndex].isPreviouslySeen = true
             } else {
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
         }
     }
     
-    init(with theme: Theme) {
-        self.theme = theme
+    init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
         cards = []
-        // add number numberOfPairs x 2 cards to cards array from theme
-        var randomlySelectedContent = theme.allUsableContent
-        randomlySelectedContent.shuffle()
-        for pairIndex in 0..<theme.numberOfPairs {
-            let content: CardContent = randomlySelectedContent[pairIndex]
+        // add number numberOfPairsOfCards x 2 cards to cards array
+        for pairIndex in 0..<numberOfPairsOfCards {
+            let content = createCardContent(pairIndex)
             cards.append(Card(content: content, id: pairIndex*2))
             cards.append(Card(content: content, id: pairIndex*2+1))
         }
@@ -52,27 +56,10 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     struct Card: Identifiable {
         var isFaceUp = false
         var isMatched = false
+        var isPreviouslySeen = false
         let content: CardContent
         
         let id: Int
-    }
-    
-    struct Theme: Identifiable {
-        let id: String
-        let allUsableContent: [CardContent]
-        let numberOfPairs: Int
-        let colorOfCards: Color
-        
-        init(id: String, allUsableContent: [CardContent], numberOfPairs: Int) {
-            self.init(id: id, allUsableContent: allUsableContent, numberOfPairs: numberOfPairs, colorOfCards: .red)
-        }
-        
-        init(id: String, allUsableContent: [CardContent], numberOfPairs: Int, colorOfCards: Color) {
-            self.id = id
-            self.allUsableContent = allUsableContent
-            self.numberOfPairs = allUsableContent.count < numberOfPairs ? allUsableContent.count : numberOfPairs
-            self.colorOfCards = colorOfCards
-        }
     }
 }
 

@@ -10,7 +10,6 @@ import SwiftUI
 // ModelView
 class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
-    typealias Theme = MemoryGame<String>.Theme
     
     private static let vehicleEmojis = [ "✈️", "🚂", "🚁", "🚀", "🛴", "🚲", "🚒", "🚐", "🛻", "🚚", "🚛", "🚔", "🚍", "🚘", "🚖", "🚠", "🚆" ]
     private static let smileyEmojis = [ "😀", "😃", "😄", "😆", "🥹", "😅" ]
@@ -22,21 +21,43 @@ class EmojiMemoryGame: ObservableObject {
         .init(id: "Flag Game", allUsableContent: flagEmojis, numberOfPairs: 8)
     ]
     
-    static func createMemoryGame() -> MemoryGame<String> {
-        let chosenTheme = gameThemes.randomElement()
-        return MemoryGame<String>(with: chosenTheme!)
+    @Published private var model: MemoryGame<String>
+     
+    private var selectedTheme: Theme
+    
+    init () {
+        selectedTheme = EmojiMemoryGame.gameThemes.randomElement()!
+        let theme = selectedTheme
+        model = MemoryGame<String>(
+            numberOfPairsOfCards: theme.numberOfPairs,
+            createCardContent: { pairIndex in
+                theme.allUsableContent[pairIndex]
+            }
+        )
     }
     
-    @Published private var model = createMemoryGame()
+    var cards: Array<Card> { model.cards }
+    var score: Int { model.score}
+    var theme: Theme { selectedTheme }
+    
+    struct Theme: Identifiable {
+        let id: String
+        let allUsableContent: [String]
+        let numberOfPairs: Int
+        let colorOfCards: Color
         
-    var cards: Array<Card> {
-        return model.cards
+        init(id: String, allUsableContent: [String], numberOfPairs: Int) {
+            self.init(id: id, allUsableContent: allUsableContent, numberOfPairs: numberOfPairs, colorOfCards: .red)
+        }
+        
+        init(id: String, allUsableContent: [String], numberOfPairs: Int, colorOfCards: Color) {
+            self.id = id
+            self.allUsableContent = allUsableContent
+            self.numberOfPairs = allUsableContent.count < numberOfPairs ? allUsableContent.count : numberOfPairs
+            self.colorOfCards = colorOfCards
+        }
     }
     
-    var currentTheme: Theme {
-        return model.theme
-    }
-        
     // MARK: - Intent(s)
     
     func choose(_ card: Card) {
@@ -44,6 +65,16 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     func startNewGame() {
-        model = EmojiMemoryGame.createMemoryGame()
+        startNewGame(with: EmojiMemoryGame.gameThemes.randomElement()!)
+    }
+    
+    func startNewGame(with theme: Theme) {
+        selectedTheme = theme
+        model = MemoryGame<String>(
+            numberOfPairsOfCards: selectedTheme.numberOfPairs,
+            createCardContent: { pairIndex in
+                selectedTheme.allUsableContent[pairIndex]
+            }
+        )
     }
 }

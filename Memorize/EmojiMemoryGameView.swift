@@ -14,7 +14,7 @@ struct EmojiMemoryGameView: View {
     var body: some View {
         VStack {
             HStack {
-                Text(game.currentTheme.id)
+                Text(game.theme.id)
                     .font(.largeTitle)
                     .fontWeight(.heavy)
                 Spacer()
@@ -25,11 +25,16 @@ struct EmojiMemoryGameView: View {
                 }
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
             }
+            .padding(.horizontal)
             AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
                 cardView(for: card)
             }
-            .foregroundColor(game.currentTheme.colorOfCards)
+            .foregroundColor(game.theme.colorOfCards)
             .padding(.horizontal)
+            Text("Score: \(game.score)")
+                .font(.title)
+                .fontWeight(.heavy)
+                .padding(.horizontal)
         }
     }
     
