@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 // Model
 struct MemoryGame<CardContent> where CardContent: Equatable {
@@ -28,9 +27,13 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
                     score += 2
-                } else if (cards[chosenIndex].isPreviouslySeen || cards[potentialMatchIndex].isPreviouslySeen) {
-                    // score should not drop below zero
-                    score -= (score > 0) ? 1 : 0
+                } else {
+                    score = max(
+                        cards.indices
+                            .filter({ $0 == chosenIndex || $0 == potentialMatchIndex })
+                            .reduce(score, { (partialResult, index) in cards[index].isPreviouslySeen ? partialResult - 1 : partialResult }),
+                        0
+                    )
                 }
                 
                 cards[chosenIndex].isFaceUp = true
