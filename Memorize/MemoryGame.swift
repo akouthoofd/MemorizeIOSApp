@@ -57,12 +57,43 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Identifiable {
-        var isFaceUp = false
-        var isMatched = false
+        var isFaceUp = false //{
+//            didSet {
+//                if isFaceUp {
+//                    startUsingBonusTime()
+//                } else {
+//                    stopUsingBonusTime()
+//                }
+//            }
+//        }
+        var isMatched = false //{
+//            didSet {
+//                stopUsingBonusTime()
+//            }
+//        }
         var isPreviouslySeen = false
         let content: CardContent
         
         let id: Int
+        
+//        var bonusTimeRemaining: TimeInterval {
+//            max(0, bonu)
+//        }
+//
+//        var isConsumingBonusTime: Bool {
+//            isFaceUp && !isMatched && bon
+//        }
+//
+//        private mutating func startUsingBonusTime() {
+//            if isConsumingBonusTime, lastFaceUpDate == nil {
+//                lastFaceUpDate = Date()
+//            }
+//        }
+//
+//        private mutating func stopUsingBonusTime() {
+//            pastFaceUpTime = faceUpTime
+//            self.lastFaceUpDate = nil
+//        }
     }
 }
 
