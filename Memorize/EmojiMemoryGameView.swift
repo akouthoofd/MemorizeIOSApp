@@ -76,7 +76,7 @@ struct EmojiMemoryGameView: View {
             if isUndealt(card) || (card.isMatched && !card.isFaceUp) {
                 Color.clear
             } else {
-                CardView(card: card)
+                CardView(card: card, game: game)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(4)
                     .transition(.asymmetric(insertion: .identity, removal: .scale))
@@ -95,7 +95,7 @@ struct EmojiMemoryGameView: View {
     var deckBody: some View {
         ZStack {
             ForEach(game.cards.filter(isUndealt)) { card in
-                CardView(card: card)
+                CardView(card: card, game: game)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .opacity, removal: .identity))
                     .zIndex(zIndex(of: card))

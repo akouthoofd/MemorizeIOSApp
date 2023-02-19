@@ -10,21 +10,31 @@ import SwiftUI
 
 struct CardView: View {
     let card: EmojiMemoryGame.Card
+    let game: EmojiMemoryGame
     
-    @State private var animatedBonusRemaining: Double = 0
+    @State private var timeFaceUp: Double = 1
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Group {
                     if card.isFaceUp {
-                        Pie(startAngle: Angle(degrees: 0 - 90), endAngle: Angle(degrees: (1 - animatedBonusRemaining) * 360 - 90))
+                        Pie(startAngle: Angle(degrees: 0 - 90), endAngle: Angle(degrees: (1 - timeFaceUp) * 360 - 90))
                             .onAppear {
-                                animatedBonusRemaining = 0.75
+                                timeFaceUp = card.isMatched ? 0 : 1
                                 withAnimation(.linear(duration: 2)) {
-                                    animatedBonusRemaining = 0
+                                    timeFaceUp = 0
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                        // flip the card back over after the animation completes
+                                        withAnimation {
+                                            if (card.isFaceUp) {
+                                                game.flip(card)
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                            
                     } else {
                         Pie(startAngle: Angle(degrees: 0 - 90), endAngle: Angle(degrees: 360 - 90))
                     }

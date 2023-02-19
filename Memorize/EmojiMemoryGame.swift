@@ -46,6 +46,10 @@ class EmojiMemoryGame: ObservableObject {
         gameLogic.choose(card)
     }
     
+    func flip(_ card: Card) {
+        gameLogic.flipUnmatchedCard(card)
+    }
+    
     func startNewGame() {
         startNewGame(with: EmojiMemoryGame.gameThemes.randomElement()!)
     }

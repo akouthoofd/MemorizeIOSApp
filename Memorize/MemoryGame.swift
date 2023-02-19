@@ -45,6 +45,13 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
+    mutating func flipUnmatchedCard(_ card: Card) {
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }), !cards[chosenIndex].isMatched
+        {
+            cards[chosenIndex].isFaceUp = false
+        }
+    }
+    
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
         cards = []
         // add number numberOfPairsOfCards x 2 cards to cards array
@@ -57,43 +64,12 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Identifiable {
-        var isFaceUp = false //{
-//            didSet {
-//                if isFaceUp {
-//                    startUsingBonusTime()
-//                } else {
-//                    stopUsingBonusTime()
-//                }
-//            }
-//        }
-        var isMatched = false //{
-//            didSet {
-//                stopUsingBonusTime()
-//            }
-//        }
+        var isFaceUp = false
+        var isMatched = false
         var isPreviouslySeen = false
         let content: CardContent
         
         let id: Int
-        
-//        var bonusTimeRemaining: TimeInterval {
-//            max(0, bonu)
-//        }
-//
-//        var isConsumingBonusTime: Bool {
-//            isFaceUp && !isMatched && bon
-//        }
-//
-//        private mutating func startUsingBonusTime() {
-//            if isConsumingBonusTime, lastFaceUpDate == nil {
-//                lastFaceUpDate = Date()
-//            }
-//        }
-//
-//        private mutating func stopUsingBonusTime() {
-//            pastFaceUpTime = faceUpTime
-//            self.lastFaceUpDate = nil
-//        }
     }
 }
 
